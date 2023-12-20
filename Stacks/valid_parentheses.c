@@ -1,33 +1,41 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
-struct Stack
-{
+#include <stdlib.h>
+#include <stdbool.h>
+#include <assert.h>
+typedef struct{
     int top;
-    char arr[10000];
-};
-
-bool isFull(struct Stack *mystack, int size)
+    char *arr;
+    int capacity;
+}Stack;
+Stack* createStack(int maxSize){
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->top = -1;
+    stack->capacity = maxSize;
+    stack->arr = (char*)malloc(maxSize*sizeof(char));
+    return stack;
+}
+bool isFull(Stack *mystack)
 {
-    return mystack->top == size - 1;
+    return mystack->top == mystack->capacity - 1;
 }
 
-bool isEmpty(struct Stack *mystack)
+bool isEmpty(Stack *mystack)
 {
     return mystack->top == -1;
 }
 
-void push(char element, struct Stack *mystack, int size)
+void push(char element, Stack *mystack)
 {
-    if (isFull(mystack, size))
+    if (isFull(mystack))
     {
         return;
     }
     mystack->arr[++mystack->top] = element;
 }
 
-void pop(struct Stack *mystack)
+void pop(Stack *mystack)
 {
     if (isEmpty(mystack))
     {
@@ -36,7 +44,7 @@ void pop(struct Stack *mystack)
     mystack->top--;
 }
 
-char top(struct Stack *mystack)
+char top(Stack *mystack)
 {
     if (isEmpty(mystack))
     {
@@ -45,31 +53,29 @@ char top(struct Stack *mystack)
     return mystack->arr[mystack->top];
 }
 
-bool isValid(char *s)
-{
-    struct Stack myStack;
-    myStack.top = -1;
+bool isValid(char *s){
     int len = strlen(s);
+    Stack *myStack = createStack(len);
     for (int i = 0; i < len; i++)
     {
         if (s[i] == '{' || s[i] == '[' || s[i] == '(')
         {
-            push(s[i], &myStack, len);
+            push(s[i],myStack);
         }
         else
         {
-            if (isEmpty(&myStack))
+            if (isEmpty(myStack))
             {
                 return false;
             }
             else
             {
-                char topEle = top(&myStack);
+                char topEle = top(myStack);
                 if ((topEle == '{' && s[i] == '}') ||
                     (topEle == '(' && s[i] == ')') ||
                     (topEle == '[' && s[i] == ']'))
                 {
-                    pop(&myStack);
+                    pop(myStack);
                 }
                 else
                 {
@@ -78,7 +84,7 @@ bool isValid(char *s)
             }
         }
     }
-    if (isEmpty(&myStack))
+    if (isEmpty(myStack))
     {
         return true;
     }
@@ -86,18 +92,7 @@ bool isValid(char *s)
 }
 int main()
 {
-    printf("Enter Input String:\n");
-    // input string
-    char s[10000];
-
-    scanf("%s", s);
-    bool ans = isValid(s);
-    if (ans)
-    {
-        printf("Valid Parentheses");
-    }
-    else
-    {
-        printf("Not Valid Parentheses");
-    }
+    assert(isValid("()[]{}") == true);
+    assert(isValid("(])") == false);
+    printf("Test cases running successfully");
 }
