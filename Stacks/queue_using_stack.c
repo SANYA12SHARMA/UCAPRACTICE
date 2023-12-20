@@ -101,5 +101,9 @@ bool myQueueEmpty(MyQueue *obj)
 
 void myQueueFree(MyQueue *obj)
 {
+    free(obj->s1->arr);
+    free(obj->s1);
+    free(obj->s2->arr);
+    free(obj->s2);
     free(obj);
 }
