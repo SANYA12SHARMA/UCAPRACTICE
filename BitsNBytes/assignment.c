@@ -50,6 +50,15 @@ int getByte(int x, int n) {
 int logicalShift(int x, int n) {
     return ((x >> n) & ~(((1 << 31) >> n) << 1));
 }
+/*
+* conditional - same as x ? y : z
+* example conditional (2, 4, 5) = 4
+* ! ~ & ^ | + << >>
+* Max ops: 16
+*/
+int conditional(int x, int y, int z) {
+    return (z ^ ((y^z) & (!x + ~0)));
+}
 /* bang - Compute !x without using !
  *  Examples: bang(3)=0, bang(0)=1
  *  Legal ops: ~ & ^ | + << >>
@@ -59,6 +68,15 @@ int bang(int x)
 {
     return 0;
 }
+/* 
+/* Return x with the n bits that begin at position p inverted (i.e. turn 0 /* into 1 and vice versa)
+/* and the rest left unchanged. Consider the indices of x to begin with the /* lower -order bit   numbered
+/* Legal ops: ~ & ^ | << >>
+/* as zero
+*/
+int invert (int x, int p, int n) {
+    return 0;
+}
 int main()
 {
     assert(bitAnd(6, 5) == 4);
@@ -66,5 +84,6 @@ int main()
     assert(sign(-23) == -1);
     assert(getByte(0x12345678,1) == 0x56);
     assert(logicalShift(0x87654321, 4) == 0x8765432);
+    assert(conditional (2, 4, 5) == 4);
     printf("Test Cases running Successfully");
 }
